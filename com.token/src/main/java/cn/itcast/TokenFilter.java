@@ -43,7 +43,7 @@ public class TokenFilter implements Filter{
 		boolean isExcludedPage = false;     
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
-		redirectPath = req.getContextPath() + redirectPath;// 没有登陆转向页面
+		String loginPath = req.getContextPath() + redirectPath;// 没有登陆转向页面
 		String uri = req.getRequestURI();
 		uri = uri.replace(req.getContextPath(),"");
 		for (String page : excludedPageArray) {// 判断是否在过滤url之外
@@ -66,7 +66,7 @@ public class TokenFilter implements Filter{
 			logger.info("test:"+token);
 			System.out.println("token="+token);
 			if (StringUtils.isEmpty(token) || !RedisApi.exists(token)){
-				resp.sendRedirect(redirectPath);
+				resp.sendRedirect(loginPath);
 			} else if (uri.equals("/logout")){
 				TokenUtils.delToken(token);
 				chain.doFilter(request, response);
