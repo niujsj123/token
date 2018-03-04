@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.itcast.redis.RedisApi;
 //@Component
 public class TokenFilter implements Filter{
-
+   private static Logger logger = Logger.getLogger(TokenFilter.class); 
 	private String excludedPages;
 	private String[] excludedPageArray;
 	private String redirectPath;
@@ -38,6 +39,7 @@ public class TokenFilter implements Filter{
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
+		logger.info("start test:");
 		boolean isExcludedPage = false;     
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
@@ -61,6 +63,7 @@ public class TokenFilter implements Filter{
 			
 			String token = JSONObject.toJSONString(claims);*/
 			String token = req.getHeader("Authorization");
+			logger.info("test:"+token);
 			System.out.println("token="+token);
 			if (StringUtils.isEmpty(token) || !RedisApi.exists(token)){
 				resp.sendRedirect(redirectPath);
